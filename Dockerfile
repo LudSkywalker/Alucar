@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm i --only=prod
+RUN npm i --omit=dev
 
 COPY --from=development /usr/src/app/dist ./dist
 
