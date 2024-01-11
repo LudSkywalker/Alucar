@@ -13,7 +13,7 @@ export class TripsController {
     @Param('id') rider_id: number,
     @Body() createPaymentDto: CreatePaymentDto,
   ) {
-    return this.tripsService.createPayment(createPaymentDto);
+    return this.tripsService.createPayment(rider_id, createPaymentDto);
   }
 
   @Post()

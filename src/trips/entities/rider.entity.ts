@@ -9,8 +9,8 @@ export class Rider {
   @Column()
   name: string;
 
-  @Column()
-  paymentSourceID: string;
+  @Column({ nullable: true })
+  paymentSourceID?: string;
 
   @OneToMany(() => Trip, (trip) => trip.driver)
   trips: [Trip];

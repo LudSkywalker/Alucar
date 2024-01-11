@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Driver } from './driver.entity';
 import { Rider } from './rider.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 enum TripStatus {
   PENDING = 'PENDING',
