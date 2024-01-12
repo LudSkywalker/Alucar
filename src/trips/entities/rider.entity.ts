@@ -9,6 +9,9 @@ export class Rider {
   @Column()
   name: string;
 
+  @Column()
+  email: string;
+
   @Column({ nullable: true })
   paymentSourceID?: string;
 

@@ -1,4 +1,10 @@
-import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 enum PaymentType {
   CARD = 'CARD',
@@ -6,14 +12,16 @@ enum PaymentType {
 }
 export class CreatePaymentDto {
   @IsString()
-  @MinLength(5)
-  tokenized_payment: string;
+  @IsNotEmpty()
+  @MinLength(7)
+  readonly tokenized_payment: string;
 
   @IsString()
-  @MinLength(5)
-  acceptance_token: string;
+  @IsNotEmpty()
+  @MinLength(7)
+  readonly acceptance_token: string;
 
   @IsEnum(PaymentType)
   @IsOptional()
-  payment_type: PaymentType = PaymentType.CARD;
+  readonly payment_type: PaymentType = PaymentType.CARD;
 }

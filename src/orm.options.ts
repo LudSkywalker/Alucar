@@ -3,7 +3,6 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 import TripsSeed from './trips/trips.seed';
-import TripsFactory from './trips/trips.factory';
 import { Rider } from './trips/entities/rider.entity';
 import { Driver } from './trips/entities/driver.entity';
 import { Trip } from './trips/entities/trip.entity';
@@ -24,7 +23,6 @@ export const ormOptions: TypeOrmModuleOptions & SeederOptions = {
   synchronize: false,
   logging: true,
   seeds: [TripsSeed],
-  factories: [TripsFactory],
   schema: process.env.DB_SCHEMA,
 };
 

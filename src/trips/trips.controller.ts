@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Res, Delete } from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
@@ -8,21 +8,32 @@ import { CreatePaymentDto } from './dto/cretate-payment.dto';
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
-  @Post('/createPaymentService/:id')
+  @Post('/createPaymentService/:riderID')
   createPayment(
-    @Param('id') rider_id: number,
+    @Param('riderID') riderID: number,
     @Body() createPaymentDto: CreatePaymentDto,
   ) {
-    return this.tripsService.createPayment(rider_id, createPaymentDto);
+    return this.tripsService.createPayment(riderID, createPaymentDto);
   }
 
-  @Post()
-  create(@Body() createTripDto: CreateTripDto) {
-    return this.tripsService.create(createTripDto);
+  @Post(':riderID')
+  async create(
+    @Param('riderID') riderID: number,
+    @Body() createTripDto: CreateTripDto,
+    @Res({ passthrough: true }) response,
+  ) {
+    const result = await this.tripsService.create(riderID, createTripDto);
+    if (result.statusCode) {
+      response.status(result.statusCode);
+    }
+    return result;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateTripDto: UpdateTripDto) {
-    return this.tripsService.update(+id, updateTripDto);
+  @Delete(':driverID')
+  finish(
+    @Param('driverID') driverID: number,
+    @Body() updateTripDto: UpdateTripDto,
+  ) {
+    return this.tripsService.finish(driverID, updateTripDto);
   }
 }

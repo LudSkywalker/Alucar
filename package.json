@@ -21,7 +21,8 @@
     "typeorm": "typeorm-ts-node-commonjs -d src/orm.options.ts",
     "db:sync": "npm run typeorm schema:sync",
     "db:drop": "npm run typeorm schema:drop",
-    "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/orm.options.ts"
+    "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/orm.options.ts",
+    "db:rebuild": "npm run db:drop && npm run db:sync && npm run seed:run"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",

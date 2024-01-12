@@ -2,7 +2,7 @@ import { Driver } from './driver.entity';
 import { Rider } from './rider.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-enum TripStatus {
+export enum TripStates {
   PENDING = 'PENDING',
   COMPLETED = 'COMPLETED',
 }
@@ -14,21 +14,21 @@ export class Trip {
 
   @Column({
     type: 'enum',
-    enum: TripStatus,
-    default: TripStatus.PENDING,
+    enum: TripStates,
+    default: TripStates.PENDING,
   })
-  state: TripStatus;
+  state: TripStates;
 
-  @Column('point', { array: true })
+  @Column('float', { array: true })
   startLocation: [number, number];
 
-  @Column('point', { array: true, nullable: true })
+  @Column('float', { array: true, nullable: true })
   endLocation: [number, number];
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
   startTime: Date;
 
-  @Column('timestamp', { nullable: true })
+  @Column('timestamp with time zone', { nullable: true })
   endTime: Date;
 
   @ManyToOne(() => Driver, (driver) => driver.id, {
