@@ -30,10 +30,15 @@ export class TripsController {
   }
 
   @Delete(':driverID')
-  finish(
+  async finish(
     @Param('driverID') driverID: number,
     @Body() updateTripDto: UpdateTripDto,
+    @Res({ passthrough: true }) response,
   ) {
-    return this.tripsService.finish(driverID, updateTripDto);
+    const result = await this.tripsService.finish(driverID, updateTripDto);
+    if (result.statusCode) {
+      response.status(result.statusCode);
+    }
+    return result;
   }
 }

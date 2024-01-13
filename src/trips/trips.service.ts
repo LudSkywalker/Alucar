@@ -124,7 +124,7 @@ export class TripsService {
     await this.tripRepository.save(trip);
     return {
       message: {
-        text: 'Trip start successfully register',
+        text: 'Trip start successfully',
         driver: { id: trip.driver.id, name: trip.driver.name },
       },
       statusCode: 201,

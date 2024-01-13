@@ -109,12 +109,12 @@ describe('AppController (e2e)', () => {
           longitude: 0,
         },
       });
-    expect(response.body).toBe({});
     expect(response.status).toBe(201);
     expect(response.body.message).toHaveProperty(
       'text',
-      'Payment source successfully register',
+      'Trip start successfully',
     );
+    expect(response.body.message.driver).toHaveProperty('id');
 
     response = await request(app.getHttpServer())
       .delete('/api/v1/trips/1')
@@ -124,11 +124,12 @@ describe('AppController (e2e)', () => {
           longitude: 0,
         },
       });
-    expect(response.body).toBe({});
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(202);
     expect(response.body.message).toHaveProperty(
       'text',
-      'Payment source successfully register',
+      'Trip finalized with successfully payment',
     );
+    expect(response.body.message).toHaveProperty('finalPriceCent');
+    expect(response.body.message).toHaveProperty('amount');
   });
 });
