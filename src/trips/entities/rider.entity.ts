@@ -3,7 +3,7 @@ import { Trip } from './trip.entity';
 
 @Entity()
 export class Rider {
-  @PrimaryGeneratedColumn()
+  @Column({ primary: true, generated: !(process.env.NODE_ENV == 'test') })
   id: number;
 
   @Column()

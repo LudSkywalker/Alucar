@@ -21,7 +21,7 @@ export const ormOptions: TypeOrmModuleOptions & SeederOptions = {
   autoLoadEntities: true,
   entities: [Rider, Driver, Trip],
   synchronize: false,
-  logging: true,
+  logging: false,
   seeds: [TripsSeed],
   schema: process.env.DB_SCHEMA,
 };

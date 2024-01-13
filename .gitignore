@@ -13,6 +13,7 @@ lerna-debug.log*
 
 # OS
 .DS_Store
+*.db
 
 # Tests
 /coverage
@@ -35,4 +36,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Temp Env Files
-*.env*
+*.env

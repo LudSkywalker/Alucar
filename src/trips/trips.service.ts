@@ -111,15 +111,17 @@ export class TripsService {
       };
     }
 
-    const trip = await this.tripRepository.save({
-      startLocation: [
-        createTripDto.startLocation.latitude,
-        createTripDto.startLocation.longitude,
-      ],
+    const trip = await this.tripRepository.create({
       startTime: createTripDto.startTime,
       rider,
       driver,
     });
+
+    trip.startLocation = [
+      createTripDto.startLocation.latitude,
+      createTripDto.startLocation.longitude,
+    ];
+    await this.tripRepository.save(trip);
     return {
       message: {
         text: 'Trip start successfully register',

@@ -7,28 +7,37 @@ export enum TripStates {
   COMPLETED = 'COMPLETED',
 }
 
+let dateType: any = 'timestamptz';
+
+if (process.env.NODE_ENV == 'test') {
+  dateType = 'datetime';
+}
+
 @Entity()
 export class Trip {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'enum',
     enum: TripStates,
     default: TripStates.PENDING,
   })
   state: TripStates;
 
-  @Column('float', { array: true })
+  @Column('json')
   startLocation: [number, number];
 
-  @Column('float', { array: true, nullable: true })
+  @Column('json', { nullable: true })
   endLocation: [number, number];
 
-  @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
+  @Column(dateType, {
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   startTime: Date;
 
-  @Column('timestamp with time zone', { nullable: true })
+  @Column(dateType, {
+    nullable: true,
+  })
   endTime: Date;
 
   @ManyToOne(() => Driver, (driver) => driver.id, {
