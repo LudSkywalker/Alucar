@@ -105,7 +105,7 @@ export class TripsService {
     if (!driver) {
       return {
         message: {
-          text: 'No avaliable drivers at this moment',
+          text: 'No available drivers at this moment',
         },
         statusCode: 202,
       };
