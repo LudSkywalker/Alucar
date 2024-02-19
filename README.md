@@ -63,9 +63,18 @@ $ docker run -p <PORT>:<PORT> --env-file .env --name alucar -it alucar-img
 Check always if your env vars for Wompi payment process are in sandbox mode, for prevent real transactions
 
 ```bash
+# tests
+$ npm run test
+
 # e2e tests
 $ npm run test:e2e
 ```
+
+### Coverage 
+
+Restult of the test coverage in the project:
+
+![Coverage](./test/coverage.jpg)
 
 ## Endpoint Documentation
 

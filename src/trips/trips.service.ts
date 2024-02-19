@@ -2,14 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { CreatePaymentDto } from './dto/cretate-payment.dto';
-import { HttpService } from '@nestjs/axios';
-import { AxiosResponse } from 'axios';
-import { firstValueFrom } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Rider } from './entities/rider.entity';
 import { Driver } from './entities/driver.entity';
 import { Trip, TripStates } from './entities/trip.entity';
+import { PaymentSystemService } from '@app/payment-system';
+import {
+  PaymentSourceData,
+  TransactionData,
+} from '@app/payment-system/payment-system.interface';
 
 @Injectable()
 export class TripsService {
@@ -20,7 +22,7 @@ export class TripsService {
     private readonly driverRepository: Repository<Driver>,
     @InjectRepository(Trip)
     private readonly tripRepository: Repository<Trip>,
-    private readonly httpService: HttpService,
+    private readonly paymentSystemService: PaymentSystemService,
   ) {}
 
   async createPayment(riderID: number, createPaymentDto: CreatePaymentDto) {
@@ -29,7 +31,7 @@ export class TripsService {
     if (!rider) {
       throw new BadRequestException('Rider not exist');
     }
-    const paymentSourceData = {
+    const paymentSourceData: PaymentSourceData = {
       type: createPaymentDto.payment_type,
       token: createPaymentDto.tokenized_payment,
       acceptance_token: createPaymentDto.acceptance_token,
@@ -37,17 +39,8 @@ export class TripsService {
     };
 
     try {
-      const paymentResponse: AxiosResponse = await firstValueFrom(
-        this.httpService.post(
-          process.env.WOMPI_URL + '/payment_sources',
-          paymentSourceData,
-          {
-            headers: {
-              Authorization: 'Bearer ' + process.env.WOMPI_PRV_KEY,
-            },
-          },
-        ),
-      );
+      const paymentResponse =
+        await this.paymentSystemService.addPaymentSource(paymentSourceData);
       const {
         data: { id: paymentSourceID },
       } = paymentResponse.data;
@@ -183,9 +176,8 @@ export class TripsService {
       ) * 100,
     );
 
-    const transactionData = {
+    const transactionData: TransactionData = {
       amount_in_cents: finalPriceCent,
-      signature: '',
       currency: 'COP',
       customer_email: rider.email,
       payment_method: {
@@ -195,31 +187,9 @@ export class TripsService {
         'TRIP-' + pendingTrip.id + '-' + pendingTrip.startTime.getTime(),
       payment_source_id: rider.paymentSourceID,
     };
-    const signatureClean =
-      transactionData.reference +
-      transactionData.amount_in_cents +
-      transactionData.currency +
-      process.env.WOMPI_INTE_KEY;
-    const encondedText = new TextEncoder().encode(signatureClean);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', encondedText);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-    transactionData.signature = hashHex;
 
     try {
-      await firstValueFrom(
-        this.httpService.post(
-          process.env.WOMPI_URL + '/transactions',
-          transactionData,
-          {
-            headers: {
-              Authorization: 'Bearer ' + process.env.WOMPI_PRV_KEY,
-            },
-          },
-        ),
-      );
+      await this.paymentSystemService.generateTransaction(transactionData);
       return {
         message: {
           text: 'Trip finalized with successfully payment',

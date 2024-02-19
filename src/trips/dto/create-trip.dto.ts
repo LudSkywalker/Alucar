@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
-
+import 'reflect-metadata';
 export class LocationDto {
   @IsNumber()
   @IsNotEmpty()

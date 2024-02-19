@@ -3,6 +3,18 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "payment-system": {
+      "type": "library",
+      "root": "libs/payment-system",
+      "entryFile": "index",
+      "sourceRoot": "libs/payment-system/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/payment-system/tsconfig.lib.json"
+      }
+    }
   }
 }

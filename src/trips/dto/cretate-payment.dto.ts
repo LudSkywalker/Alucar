@@ -23,5 +23,5 @@ export class CreatePaymentDto {
 
   @IsEnum(PaymentType)
   @IsOptional()
-  readonly payment_type: PaymentType = PaymentType.CARD;
+  readonly payment_type?: PaymentType = PaymentType.CARD;
 }
